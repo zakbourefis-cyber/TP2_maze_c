@@ -1,0 +1,1 @@
+void mark_neighboors(maze* m, coord c);

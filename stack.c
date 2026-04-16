@@ -3,23 +3,28 @@
 
 void stack_init(Stack *p)
 {
-  (void)p;
+  p->taille = 0; 
 }
 
 bool stack_empty(Stack *p)
 {
-  (void)p;
-  return true;
-}
-
-Element stack_pop(Stack *p)
-{
-  (void)p;
-  return 0;
+  return (p->taille == 0);
 }
 
 void stack_push(Stack *p, Element e)
 {
-  (void)p;
-  (void)e;
+  if (p->taille < PILEMAX) {
+    p->elements[p->taille] = e;
+    p->taille++;
+  }
+}
+
+Element stack_pop(Stack *p)
+{
+  if (!stack_empty(p)) {
+    p -> taille --;
+    return p -> elements [p -> taille];
+  }
+  
+  return 0;
 }

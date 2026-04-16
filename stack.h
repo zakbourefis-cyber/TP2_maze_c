@@ -7,11 +7,12 @@
 
 #define PILEMAX 100
 
-typedef int Element;
+typedef coord Element;
 
 typedef struct _stack
 {
-  // exo 2
+  Element elements[PILEMAX];
+  int taille;
 } Stack;
 
 /**
