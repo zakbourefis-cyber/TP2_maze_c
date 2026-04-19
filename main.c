@@ -8,11 +8,96 @@
 #include "stack.h"
 #include "structure.h"
 
-void solve(maze *m)
-{
-  (void)m; // Supprimez cette ligne !
-  // Exo 3
+// Fonction récursive qui regarde les chemins
+bool solve_rec(maze *m, coord c, Stack *p) {
+    coord prev = {-1, -1}; // test
+    
+    // On regarde la case précédente 
+    if (!stack_empty(p)) {
+        prev = stack_pop(p);
+        stack_push(p, prev);
+    }
+    
+    // On regarde la case actuelle
+    stack_push(p, c);
+    
+    // On regarde si on a gagner 
+    if (is_target(m, c)) {
+        return true; 
+    }
+    
+    // on regarde ou on va
+    neighboors n = list_neighboors(m, c);
+    coord next;
+    
+    // nord
+    if (n.north) {
+        next = (coord){c.x, c.y - 1};
+        if (!equal(next, prev)) {
+            if (solve_rec(m, next, p) == true) {
+                return true;
+            }
+        }
+    }
+    
+    // sud
+    if (n.south) {
+        next = (coord){c.x, c.y + 1};
+        // on vérifie qu'on ne vient pas juste de cette case
+        if (!equal(next, prev)) {
+            // si on va vers la sortie on renvoie true
+            if (solve_rec(m, next, p) == true) {
+                return true;
+            }
+        }
+    }
+
+    // est
+    if (n.east) {
+        next = (coord){c.x + 1, c.y};
+        if (!equal(next, prev)) {
+            if (solve_rec(m, next, p) == true) {
+                return true;
+            }
+        }
+    }
+
+    // ouest
+    if (n.west) {
+        next = (coord){c.x - 1, c.y};
+        if (!equal(next, prev)) {
+            if (solve_rec(m, next, p) == true) {
+                return true;
+            }
+        }
+    }
+    
+    // si ca marche pas on retire la case de la pile
+    stack_pop(p);
+    return false;
 }
+
+// Permet de lancer le solveur
+void solve(maze *m) {
+    Stack p;
+    stack_init(&p);
+    
+    coord depart = {0, 0}; // on va au départ
+    
+    // On regarde
+    if (solve_rec(m, depart, &p) == true) {
+        
+        // on remplace alors le chemin par des "." (exerci )
+        while (!stack_empty(&p)) {
+            coord chemin = stack_pop(&p);
+            set_tag(m, chemin, ".");
+        }
+    }
+    free_stack(&p); // On oublie pas de free
+}
+
+
+
 
 void usage(const char *name)
 {
@@ -43,15 +128,15 @@ int main(int argc, char **argv)
   {
     printf("Vous êtes arrivés à la sortie !\n");
   }
-  mark_neighboors(&m, c);
-  set_tag(&m, c, "x");
+  init_maze(&m, w, h); 
+  solve(&m);
   print_maze(&m);
   free_maze(&m);
-
   return 0;
 }
 
 void mark_neighboors(maze* m, coord c) {
+  // permet de marquer le joueur
     set_tag(m, c, "x");
     neighboors v = list_neighboors(m, c);
     coord voisin;

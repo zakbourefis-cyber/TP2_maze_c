@@ -3,7 +3,7 @@
 
 void stack_init(Stack *p)
 {
-  p->haut_pile = NULL; // Une pile vide n'a pas de sommet
+  p->haut_pile = NULL; // pile vide donc pas de haut
 }
 
 bool stack_empty(Stack *p)
@@ -13,17 +13,11 @@ bool stack_empty(Stack *p)
 
 void stack_push(Stack *p, Element e)
 {
-  // 1. On fabrique un nouveau noeud
+  //On fait un nouveau noeud
   noeud *nouveau_noeud = (noeud *)malloc(sizeof(noeud));
-  
   if (nouveau_noeud != NULL) {
-    // 2. On remplit le noeud
     nouveau_noeud->data = e;
-    
-    // 3. On accroche ce noeud au-dessus de l'ancien sommet
     nouveau_noeud->suiv = p->haut_pile;
-    
-    // 4. Ce nouveau noeud devient officiellement le nouveau sommet
     p->haut_pile = nouveau_noeud;
   }
 }
@@ -31,18 +25,10 @@ void stack_push(Stack *p, Element e)
 Element stack_pop(Stack *p)
 {
   if (!stack_empty(p)) {
-    // 1. On garde un pointeur vers le noeud qu'on veut retirer
     noeud *temp = p->haut_pile;
-    
-    // 2. On sauvegarde la donnée pour pouvoir la renvoyer
     Element e = temp->data;
-    
-    // 3. Le sommet de la pile devient le noeud d'en dessous
     p->haut_pile = temp->suiv;
-    
-    // 4. On détruit l'ancien noeud pour éviter les fuites de mémoire
     free(temp);
-    
     return e;
   }
   
