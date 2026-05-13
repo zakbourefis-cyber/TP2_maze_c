@@ -1,0 +1,28 @@
+# Compiled object files
+*.o
+*.obj
+
+# Executables
+maze
+*.exe
+*.out
+*.app
+
+# Dependencies
+*.d
+
+# Build artifacts
+*.a
+*.so
+*.dylib
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
